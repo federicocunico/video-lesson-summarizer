@@ -136,7 +136,7 @@ docker compose -f docker/docker-compose.cuda.yml run --rm video-summarizer proce
 
 ```powershell
 uv sync --extra build
-uv run pyinstaller build/video_summarizer.spec --noconfirm
+uv run pyinstaller packaging/video_summarizer.spec --noconfirm
 # Output: dist/video-lesson-summarizer/
 ```
 

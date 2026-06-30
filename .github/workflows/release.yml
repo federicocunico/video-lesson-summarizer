@@ -28,7 +28,7 @@ jobs:
         run: uv sync --extra build
 
       - name: Build Windows executable
-        run: uv run pyinstaller build/video_summarizer.spec --noconfirm
+        run: uv run pyinstaller packaging/video_summarizer.spec --noconfirm
 
       - name: Package release archive
         shell: pwsh
