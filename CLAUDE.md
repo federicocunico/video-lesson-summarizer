@@ -1,0 +1,3 @@
+- Use `uv` package manager to use python.
+- Use docker to containerize the application.
+- If GPU available, ensure and force usage of CUDA, verify the correct usage of GPU with proper runtime tests.

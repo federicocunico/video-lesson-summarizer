@@ -1,0 +1,11 @@
+services:
+  video-summarizer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: video-summarizer:latest
+    env_file:
+      - ../.env
+    volumes:
+      - ../data:/data:ro
+      - ../output:/output
