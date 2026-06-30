@@ -161,3 +161,62 @@ def transcribe_audio(
 def load_transcript(path: Path) -> Transcript:
     data = json.loads(path.read_text(encoding="utf-8"))
     return Transcript.from_dict(data)
+
+
+def format_timestamp(seconds: float) -> str:
+    total = max(0, int(seconds))
+    hours, remainder = divmod(total, 3600)
+    minutes, secs = divmod(remainder, 60)
+    if hours:
+        return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+    return f"{minutes:02d}:{secs:02d}"
+
+
+def format_transcript_plain(transcript: Transcript) -> str:
+    lines: list[str] = []
+    if transcript.language:
+        lines.append(f"Lingua: {transcript.language}")
+    if transcript.duration is not None:
+        lines.append(f"Durata: {format_timestamp(transcript.duration)}")
+    if lines:
+        lines.append("")
+
+    lines.append("=== Testo completo ===")
+    lines.append("")
+    lines.append(transcript.text.strip() or "(vuoto)")
+    lines.append("")
+    lines.append("=== Segmenti con timestamp ===")
+    lines.append("")
+
+    for segment in transcript.segments:
+        start = format_timestamp(segment.start)
+        end = format_timestamp(segment.end)
+        text = segment.text.strip()
+        if text:
+            lines.append(f"[{start} – {end}] {text}")
+
+    return "\n".join(lines)
+
+
+def save_transcript_markdown(transcript: Transcript, path: Path) -> None:
+    parts = ["# Trascrizione completa", ""]
+    if transcript.language:
+        parts.append(f"**Lingua:** {transcript.language}")
+    if transcript.duration is not None:
+        parts.append(f"**Durata:** {format_timestamp(transcript.duration)}")
+    parts.extend(["", "## Testo completo", "", transcript.text.strip() or "_(vuoto)_", ""])
+    parts.extend(["## Segmenti", ""])
+
+    for segment in transcript.segments:
+        text = segment.text.strip()
+        if not text:
+            continue
+        start = format_timestamp(segment.start)
+        end = format_timestamp(segment.end)
+        parts.append(f"### [{start} – {end}]")
+        parts.append("")
+        parts.append(text)
+        parts.append("")
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(parts), encoding="utf-8")

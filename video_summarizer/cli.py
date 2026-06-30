@@ -22,6 +22,14 @@ console = Console()
 
 
 @app.command()
+def gui() -> None:
+    """Launch the desktop GUI."""
+    from video_summarizer.gui import run_gui
+
+    run_gui()
+
+
+@app.command()
 def process(
     video: Path = typer.Argument(..., help="Path to input video (mp4)"),
     max_duration: Optional[int] = typer.Option(

@@ -3,6 +3,7 @@ name = "video-summarizer"
 version = "0.1.0"
 description = "Extract audio from video, transcribe with Whisper, summarize with LLM"
 readme = "README.md"
+license = { text = "MIT" }
 requires-python = ">=3.12"
 dependencies = [
     "faster-whisper>=1.1.0",
@@ -13,13 +14,17 @@ dependencies = [
 ]
 
 [project.scripts]
-video-summarizer = "video_summarizer.cli:app"
+video-summarizer = "video_summarizer.cli:main"
+video-summarizer-gui = "video_summarizer.gui:run_gui"
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.3.0",
     "pytest-asyncio>=0.25.0",
     "respx>=0.22.0",
+]
+build = [
+    "pyinstaller>=6.11.0",
 ]
 
 [build-system]

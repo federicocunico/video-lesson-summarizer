@@ -9,7 +9,11 @@ from video_summarizer.checkpoint import CheckpointManager
 from video_summarizer.config import Settings, get_settings, job_dir
 from video_summarizer.llm import create_llm_client
 from video_summarizer.summarize.pipeline import run_summarize_pipeline
-from video_summarizer.transcribe import load_transcript, transcribe_audio
+from video_summarizer.transcribe import (
+    load_transcript,
+    save_transcript_markdown,
+    transcribe_audio,
+)
 
 console = Console()
 
@@ -69,6 +73,10 @@ def process_video(
             transcript_done=True,
             transcript_path=str(transcript_path),
         )
+
+    transcript_md_path = work_dir / "transcript.md"
+    if force or not transcript_md_path.exists():
+        save_transcript_markdown(transcript, transcript_md_path)
 
     console.print(
         f"[dim]Transcript: {len(transcript.text)} chars, "
